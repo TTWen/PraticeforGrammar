@@ -29,7 +29,7 @@ public class Test {
 
     static String str;
     public static void main(String[] args) {
-        test11();
+        test12();
     }
 
     public static void test1(List<Integer> list) {
@@ -225,13 +225,14 @@ public class Test {
          * Java 虚拟机会先在字符串常量池中查找有没有‘123’这个字符串对象，
          * 如果有，就不会在字符串常量池中创建‘123’这个对象了，
          * 直接在堆中创建一个‘123’的字符串对象，
-         * 然后将堆中这个‘二哥’的对象地址返回赋值给变量 str1
+         * 然后将堆中这个‘123’的对象地址返回赋值给变量 str1
          *
-         * 如果没有，先在字符串常量池中创建一个‘123’的字符串对象，
+         * 如果没有，先在字符串常量池中创建一个‘123’的字符串对象
+         * （常量池中的对象虽然不用，但可以顺便创建一个在常量池里，这种方式创建的对象都在堆上），
          * 然后再在堆中创建一个‘123’的字符串对象，
          * 然后将堆中这个‘123’的字符串对象地址返回赋值给变量 s
          */
-        String str1 = new String("123");
+//        String str1 = new String("123");
 
 
         /**
@@ -239,16 +240,95 @@ public class Test {
          * 如果有，则不创建任何对象，直接将字符串常量池中这个“456”的对象地址返回，赋给变量 str2；
          * 如果没有，在字符串常量池中创建“456”这个对象，然后将其地址返回，赋给变量 str2
          */
-        String str2 = "456";
+//        String str2 = "456";
 
 
-//        这两行代码会创建三个对象，字符串常量池中一个，堆上两个
-        String s = new String("111");
-        String s1 = new String("111");
+        /*
+        这两行代码会创建三个对象，字符串常量池中一个，堆上两个:
+        1、首先看常量池中有没有111，没有，则在常量池中创建一个 "111" 对象
+        2、在堆上创建一个 "111" 的对象，同时有一个引用 s 指向 堆上的 "111"
+        3、再看常量池中有没有111，已经有了，则不再在常量池中创建
+        4、在堆上再创建一个"111"的对象，同时有一个引用 s1 指向再次创建的"111"
+         */
+//        String s = new String("111");
+//        String s1 = new String("111");
+
 
 //        这两行代码只会创建一个对象，就是字符串常量池中的那个。这样的话，性能肯定就提高了
-        String s2 = "222";
-        String s3 = "222";
+//        String s2 = "222";
+//        String s3 = "222";
+
+
+        /*
+        字符串常量池总结：
+        1、使用双引号声明的字符串对象会保存在字符串常量池中。
+        2、使用 new 关键字创建的字符串对象会先从字符串常量池中找，如果没找到就创建一个，
+        然后再在堆中创建字符串对象；如果找到了，就直接在堆中创建字符串对象。
+        3、针对没有使用双引号声明的字符串对象来说，就像下面代码中的 s 那样：
+         */
+//        String s = new String("111") + new String("222");
+//        如果想把 s 的内容也放入字符串常量池的话，可以调用 intern() 方法来完成。
+
+
+
+
+//        String s1 = new String("111222");
+//        String s2 = s1.intern();  // 如果常量池里有111222，则返回常量池里的引用
+//        System.out.println(s1 == s2); // False
+//        s1 返回的是堆上的对象，s2 返回的常量池的中对象
+
+
+
+        String s1 = new String("111") + new String("222");
+        String s2 = s1.intern();
+        System.out.println(s1 == s2);
+//        首先在常量池中新建 "111"对象，再在堆上新建"111"对象
+//        再在常量池中新建"222"对象，再在堆上新建"222"对象
+//        再在堆中创建一个 "111222"的对象，s1指向这个对象
+//        执行 intern 时，首先从字符串常量池中找到"111222"，没有，但堆中有，
+//        那么字符串常量池中的保存的是堆中"111222"对象的引用
+//        s1 返回的是堆上的对象的地址，s2 返回的也是堆上对象的地址
+
+    }
+
+    public static void test12() {
+        String alita = new String("111");
+        String luolita = new String("111");
+
+        System.out.println(alita.equals(luolita)); // true
+        System.out.println(alita == luolita); // false
+
+
+        System.out.println(new String("333").equals("333"));
+        // 堆上创建的 "333"对象，常量池中创建的 "333"对象，值相同，true
+
+        System.out.println(new String("444") == "444");
+//        堆上创建的"444"对象，常量池中创建的 "444"对象，地址不同，false
+
+        System.out.println(new String("555") == new String("555"));
+//        都是堆上创建的两个 "555"对象，false
+
+        System.out.println("666" == "666");
+//        常量池中的同一个对象，true
+
+        System.out.println("8777" == "8" + "777");
+//        "8" 和 "777" 都在字符串常量池，编译器在遇到‘+’操作符的时候将其自动优化为"8777"，true
+
+        System.out.println(new String("999").intern() == "999");
+//        先在字符串常量池中创建"999"，再在堆上创建"999"，intern直接返回堆上的"999"，true
+
+
+        /*
+        如果要进行两个字符串对象的内容比较，除了 .equals() 方法，还有其他两个可选的方案。
+        Objects.equals() 这个静态方法的优势在于不需要在调用之前判空。
+        如果直接使用 a.equals(b)，则需要在调用之前对 a 进行判空，
+        否则可能会抛出空指针 java.lang.NullPointerException。Objects.equals() 用起来就完全没有这个担心
+        .contentEquals() 的优势在于可以将字符串与任何的
+        字符序列（StringBuffer、StringBuilder、String、CharSequence）进行比较
+
+         */
+//
+
     }
 }
 
