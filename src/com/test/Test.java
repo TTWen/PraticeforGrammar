@@ -8,9 +8,8 @@ package com.test;
  */
 
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * 文档注释
@@ -30,7 +29,7 @@ public class Test {
 
     static String str;
     public static void main(String[] args) {
-        test8();
+        test11();
     }
 
     public static void test1(List<Integer> list) {
@@ -178,9 +177,79 @@ public class Test {
     }
 
     public static void test9(){
+        int[] start;
+        int end[];
+
+        int[] array = new int[10]; // 默认初始化为 0
+        Integer[] array1 = new Integer[]{1,2,3}; // 可变长度
+
+//        但需要注意的是，该方法返回的 ArrayList 并不是 java.util.ArrayList，它其实是 Arrays 类的一个内部类
+        List<Integer> alist = Arrays.asList(array1); // 数组转 list
+//        如果需要添加元素或者删除元素的话，需要把它转成 java.util.ArrayList。
+        new ArrayList<>(Arrays.asList(array1));
+
+        Arrays.sort(array1);
+
+        String [] array2 = new String[] {"A","E","Z","B","C"};
+//        对1~3位置上的内容反序输出
+        Arrays.sort(array2, 1, 3, Comparator.comparing(String::toString).reversed());
+
+        int index = Arrays.binarySearch(array1, 1);
+
+
 
     }
 
+    public static void test10() {
+        String [] test = new String[]{"111", "222", "333", "444"};
+
+        Arrays.asList(test).stream().forEach(s -> System.out.println(s));
+        System.out.println();
+
+        Stream.of(test).forEach(System.out::println);
+        System.out.println();
+
+        Arrays.stream(test).forEach(System.out::println);
+        System.out.println();
+
+        System.out.println(Arrays.toString(test));
+
+        String[][] deepArray = new String[][] {{"11", "12"}, {"21", "22"}};
+        System.out.println(Arrays.deepToString(deepArray));
+    }
+
+    public static void test11() {
+
+        /**
+         * 使用 new 关键字创建一个字符串对象时，
+         * Java 虚拟机会先在字符串常量池中查找有没有‘123’这个字符串对象，
+         * 如果有，就不会在字符串常量池中创建‘123’这个对象了，
+         * 直接在堆中创建一个‘123’的字符串对象，
+         * 然后将堆中这个‘二哥’的对象地址返回赋值给变量 str1
+         *
+         * 如果没有，先在字符串常量池中创建一个‘123’的字符串对象，
+         * 然后再在堆中创建一个‘123’的字符串对象，
+         * 然后将堆中这个‘123’的字符串对象地址返回赋值给变量 s
+         */
+        String str1 = new String("123");
+
+
+        /**
+         * Java 虚拟机会先在字符串常量池中查找有没有“456”这个字符串对象，
+         * 如果有，则不创建任何对象，直接将字符串常量池中这个“456”的对象地址返回，赋给变量 str2；
+         * 如果没有，在字符串常量池中创建“456”这个对象，然后将其地址返回，赋给变量 str2
+         */
+        String str2 = "456";
+
+
+//        这两行代码会创建三个对象，字符串常量池中一个，堆上两个
+        String s = new String("111");
+        String s1 = new String("111");
+
+//        这两行代码只会创建一个对象，就是字符串常量池中的那个。这样的话，性能肯定就提高了
+        String s2 = "222";
+        String s3 = "222";
+    }
 }
 
 interface Runnable{}
