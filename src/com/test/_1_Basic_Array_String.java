@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * 文档注释
  */
-public class Test {
+public class _1_Basic_Array_String {
 
     // age
     /**
@@ -29,7 +29,7 @@ public class Test {
 
     static String str;
     public static void main(String[] args) {
-        test12();
+        test14();
     }
 
     public static void test1(List<Integer> list) {
@@ -68,7 +68,7 @@ public class Test {
         System.out.println(a % b);//1
     }
 
-    public static void test3(){
+    public static void test3() {
         //        Infinity
         System.out.println(10.0 / 0.0);
 
@@ -81,7 +81,7 @@ public class Test {
 
     }
 
-    public static void test4(){
+    public static void test4() {
 
         int a = 60, b = 13;
         System.out.println("a 的二进制：" + Integer.toBinaryString(a)); // 111100
@@ -113,7 +113,7 @@ public class Test {
         System.out.println('a'&'b');
     }
 
-    public static void test5(){
+    public static void test5() {
         System.out.println(10<<2);//10*2^2=10*4=40
         System.out.println(10<<3);//10*2^3=10*8=80
         System.out.println(20<<2);//20*2^2=20*4=80
@@ -125,7 +125,7 @@ public class Test {
         System.out.println(20>>3);//20/2^3=20/8=2
     }
 
-    public static void test6(){
+    public static void test6() {
         int a=10;
         int b=5;
         int c=20;
@@ -146,7 +146,7 @@ public class Test {
 //        也就是说，& 和 | 性能不如 && 和 ||，但用法一样
     }
 
-    public static void test7(){
+    public static void test7() {
         int a=2;
         int b=5;
         int min=(a < b) ? a : b;
@@ -158,7 +158,7 @@ public class Test {
         FOOTBALL,
         UNKNOWN
     }
-    public static void test8(){
+    public static void test8() {
         int age = 20;
         switch (Sports.FOOTBALL) {
             case TENNIS:
@@ -176,7 +176,7 @@ public class Test {
         }
     }
 
-    public static void test9(){
+    public static void test9() {
         int[] start;
         int end[];
 
@@ -329,6 +329,60 @@ public class Test {
          */
 //
 
+    }
+
+    public static void test13() {
+        /*
+        编译时把"+"号操作符替换成了StringBuilder的 append() 方法
+         */
+        String _111 = "111";
+        String _222 = "222";
+        System.out.println(_111 + _222);
+
+
+        /*
+        循环体内，拼接字符串最好使用 StringBuilder 的 append() 方法，而不是 + 号操作符。
+        原因就在于循环体内如果用 + 号操作符的话，就会产生大量的 StringBuilder 对象，
+        不仅占用了更多的内存空间，还会让 Java 虚拟机不同的进行垃圾回收，从而降低了程序的性能。
+         */
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i < 10; i++) {
+            String _3 = "3";
+            String _4 = "4";
+            sb.append(_3);
+            sb.append(_4);
+        }
+        System.out.println(sb);
+
+        /*
+        StringBuffer 和 StringBuilder 是类似的，
+        StringBuffer 加了 synchronized 关键字，因此是线程安全的
+         */
+
+
+        String _1 = "1";
+        String _nul = null;
+        System.out.println(_1+_nul);  // 1null
+
+        String _123 = "123";
+        String _456 = null;
+//        System.out.println(_123.concat(_456));  // 抛出异常 NullPointerException
+
+
+        String _t = "t";
+        String _q = "q";
+        String j = String.join("---", _t, _q);
+        System.out.println(j);  // t---q
+
+    }
+
+    public static void test14() {
+        String test_reg = "I like.it";
+        String[] res1 = test_reg.split("."); // 空
+        String[] res2 = test_reg.split("\\."); // [I like, it]，使用\\ 来转义
+        String[] res3 = test_reg.split("[.]"); // [I like, it]，使用[]来包裹住内容
+        String[] res4 = test_reg.split(","); //  [I like.it]
+        System.out.println(Arrays.toString(res4));
     }
 }
 
